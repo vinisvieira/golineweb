@@ -21,6 +21,7 @@ public class Senha {
 	private Date dataInicio;
 	private Date dataFinal;
 	private Consultorio consultorio;
+	private Paciente paciente;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,6 +83,16 @@ public class Senha {
 
 	public void setConsultorio(Consultorio consultorio) {
 		this.consultorio = consultorio;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "paciente_id")
+	public Paciente getPaciente() {
+		return paciente;
+	}
+
+	public void setPaciente(Paciente paciente) {
+		this.paciente = paciente;
 	}
 
 	@Override

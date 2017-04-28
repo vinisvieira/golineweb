@@ -85,7 +85,7 @@ public class Consultorio {
 		this.especialidade = especialidade;
 	}
 
-	public boolean isStatus() {
+	public boolean getStatus() {
 		return status;
 	}
 

@@ -1,32 +1,19 @@
 package br.com.goline2.model.entity.impl;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 
-@Entity
-@Table(name = "a_sysnti_user")
-public class User {
+@MappedSuperclass
+public abstract class User {
 
 	private Long id;
 	private String nome;
 	private String login;
 	private String password;
-	private UserProfiles profile;
 	private boolean status;
-
-	public enum UserProfiles {
-		ADMINISTRADOR;
-	}
-
-	public User() {
-		// TODO Auto-generated constructor stub
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,15 +51,6 @@ public class User {
 		this.password = password;
 	}
 
-	@Enumerated(EnumType.STRING)
-	public UserProfiles getProfile() {
-		return profile;
-	}
-
-	public void setProfile(UserProfiles profile) {
-		this.profile = profile;
-	}
-
 	public boolean isStatus() {
 		return status;
 	}
@@ -81,4 +59,11 @@ public class User {
 		this.status = status;
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", nome=" + nome + ", login=" + login + ", password=" + password + ", status="
+				+ status + "]";
+	}
+
 }
+

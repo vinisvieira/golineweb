@@ -4,35 +4,18 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Paciente {
+public class Paciente extends User{
 
-	private Long id;
-	private String nome;
-	private String login;
-	private String password;
 	private String email;
 	private String telefone;
 	private String cpf;
-	private boolean status;
 	private List<Consultorio> consultorio;
 	private List<Agendamento> agendamento;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+	private List<Senha> senha;
 
 	@Column(unique = true, nullable = false)
 	public String getEmail() {
@@ -49,38 +32,6 @@ public class Paciente {
 
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public boolean isStatus() {
-		return status;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
 	}
 
 	@Column(unique = true, nullable = false)
@@ -108,6 +59,15 @@ public class Paciente {
 
 	public void setAgendamento(List<Agendamento> agendamento) {
 		this.agendamento = agendamento;
+	}
+
+	@OneToMany(mappedBy = "paciente", targetEntity = Senha.class)
+	public List<Senha> getSenha() {
+		return senha;
+	}
+
+	public void setSenha(List<Senha> senha) {
+		this.senha = senha;
 	}
 
 }
