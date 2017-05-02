@@ -25,6 +25,7 @@ import br.com.goline2.model.jpa.impl.JPAUtil;
 import br.com.goline2.util.Constants;
 import br.com.goline2.util.JSONUtil;
 import br.com.goline2.util.ResponseBuilderGenerator;
+import br.com.goline2.util.StringUtil;
 import br.com.goline2.util.ValidarCPF;
 
 @Path("/paciente")
@@ -46,14 +47,17 @@ public class PacienteRestService {
 
 		this.simpleEntityManager = JPAUtil.getInstance(Constants.PERSISTENCE_UNIT_NAME);
 		this.pacienteDAO = new PacienteDAO(simpleEntityManager.getEntityManager());
+		Paciente paciente = new Paciente();
 
 		try {
 			this.simpleEntityManager.beginTransaction();
 
-			Paciente paciente = new Gson().fromJson(servletRequest.getReader(), Paciente.class);
+			paciente = new Gson().fromJson(servletRequest.getReader(), Paciente.class);
 
 			if (!this.pacienteDAO.validarEmail(paciente.getEmail())) {
 				if (ValidarCPF.validaCPF(paciente.getCpf())) {
+
+					paciente.setPassword(StringUtil.SHA1(paciente.getPassword()));
 
 					pacienteDAO.save(paciente);
 					simpleEntityManager.commit();
@@ -120,6 +124,7 @@ public class PacienteRestService {
 	@DELETE
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/{idPaciente}")
+	@PermitAll
 	public Response delete(@PathParam("idPaciente") Long idPaciente) throws IOException {
 
 		ResponseBuilder responseBuilder = Response.noContent();
@@ -168,6 +173,7 @@ public class PacienteRestService {
 
 			paciente.setAgendamento(null);
 			paciente.setConsultorio(null);
+			paciente.setSenha(null);
 			paciente.setPassword(null);
 
 			responseBuilder = ResponseBuilderGenerator.createOKResponseJSON(responseBuilder,

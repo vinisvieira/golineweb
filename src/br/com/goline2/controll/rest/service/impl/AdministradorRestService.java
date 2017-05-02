@@ -1,9 +1,11 @@
 package br.com.goline2.controll.rest.service.impl;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -42,26 +44,26 @@ public class AdministradorRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	// @RolesAllowed("ADMINISTRADOR")
-	private Response create() throws IOException {
+	@PermitAll
+	public Response create() throws IOException {
 
 		ResponseBuilder responseBuilder = Response.noContent();
 
 		this.simpleEntityManager = JPAUtil.getInstance(Constants.PERSISTENCE_UNIT_NAME);
-		this.administradorDAO = new AdministradorDAO(this.simpleEntityManager.getEntityManager());
+		this.administradorDAO = new AdministradorDAO(simpleEntityManager.getEntityManager());
+		Administrador administrador = new Administrador();
 
 		try {
 			this.simpleEntityManager.beginTransaction();
 
-			Administrador administrador = new Gson().fromJson(servletRequest.getReader(), Administrador.class);
+			administrador = new Gson().fromJson(servletRequest.getReader(), Administrador.class);
 
 			if (!administradorDAO.loginExiste(administrador.getLogin())) {
 
 				administrador.setPassword(StringUtil.SHA1(administrador.getPassword()));
-				administrador.setStatus(Constants.ACTIVE_USER);
 
-				this.administradorDAO.save(administrador);
-				this.simpleEntityManager.commit();
+				administradorDAO.save(administrador);
+				simpleEntityManager.commit();
 
 				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
 
@@ -86,7 +88,7 @@ public class AdministradorRestService {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	// @RolesAllowed("ADMINISTRADOR")
+	@PermitAll
 	public Response update() throws IOException {
 		ResponseBuilder responseBuilder = Response.noContent();
 
@@ -122,7 +124,7 @@ public class AdministradorRestService {
 	@DELETE
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/{idAdministrador}")
-	// @RolesAllowed("ADMINISTRADOR")
+	@PermitAll
 	public Response delete(@PathParam("idAdministrador") Long idAdministrador) throws IOException {
 		ResponseBuilder responseBuilder = Response.noContent();
 
@@ -153,8 +155,8 @@ public class AdministradorRestService {
 	}
 
 	@GET
-	// @RolesAllowed("ADMINISTRADOR")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PermitAll
 	public Response read() throws IOException {
 
 		ResponseBuilder responseBuilder = Response.noContent();
@@ -191,9 +193,9 @@ public class AdministradorRestService {
 	}
 
 	@GET
-	// @RolesAllowed("ADMINISTRADOR")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{idAdm}")
+	@PermitAll
 	public Response getById(@PathParam("idAdm") Long idAdm) throws IOException {
 
 		ResponseBuilder responseBuilder = Response.noContent();
@@ -225,9 +227,9 @@ public class AdministradorRestService {
 	}
 
 	@GET
-	// @RolesAllowed("ADMINISTRADOR")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/paciente/{idAdm}")
+	@Path("/pacientes/{idAdm}")
+	@PermitAll
 	public Response getListPaciente(@PathParam("idAdm") Long idAdm) throws IOException {
 
 		ResponseBuilder responseBuilder = Response.noContent();
@@ -238,6 +240,7 @@ public class AdministradorRestService {
 		Administrador administrador = new Administrador();
 		List<Consultorio> consultorios = new ArrayList<Consultorio>();
 		List<Paciente> pacientes = new ArrayList<Paciente>();
+		Consultorio consultorio = new Consultorio();
 		int index = 0;
 
 		try {
@@ -247,8 +250,10 @@ public class AdministradorRestService {
 
 			if (administrador != null) {
 				for (int i = 0; i < administrador.getConsultorio().size(); i++) {
-					Consultorio consultorio = new Consultorio();
 					consultorio = administrador.getConsultorio().get(i);
+					consultorio.setAdministradores(null);
+					consultorio.setAgendamento(null);
+					consultorio.setSenhas(null);
 					consultorios.add(consultorio);
 				}
 			} else {
@@ -257,6 +262,9 @@ public class AdministradorRestService {
 			}
 			for (Paciente paciente : consultorios.get(index).getPacientes()) {
 
+				paciente.setAgendamento(null);
+				paciente.setConsultorio(null);
+				paciente.setSenha(null);
 				pacientes.add(paciente);
 				index++;
 			}

@@ -19,10 +19,4 @@ public class Administrador extends User {
 		this.consultorio = consultorio;
 	}
 
-	@Override
-	public String toString() {
-		return "Administrador [Id()=" + getId() + ", Nome()=" + getNome()
-				+ ", Login()=" + getLogin() + ", Password()=" + getPassword() + "]";
-	}
-
 }

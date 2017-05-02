@@ -59,11 +59,4 @@ public abstract class User {
 		this.status = status;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", nome=" + nome + ", login=" + login + ", password=" + password + ", status="
-				+ status + "]";
-	}
-
 }
-
