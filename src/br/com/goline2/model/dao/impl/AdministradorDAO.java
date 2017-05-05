@@ -13,11 +13,11 @@ public class AdministradorDAO extends GenericDAO<Long, Administrador> {
 		// TODO Auto-generated constructor stub
 	}
 
-	public boolean loginExiste(String login) {
+	public boolean emailExiste(String email) {
 		EntityManager entityManager = super.getEntityManager();
 
-		Query query = entityManager.createQuery("SELECT u FROM Administrador u WHERE u.login = :login");
-		query.setParameter("login", login);
+		Query query = entityManager.createQuery("SELECT u FROM Administrador u WHERE u.email = :email");
+		query.setParameter("email", email);
 		return (query.getResultList().size() > 0);
 	}
 

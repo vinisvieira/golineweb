@@ -23,7 +23,7 @@ public class AgendamentoDAO extends GenericDAO<Long, Agendamento> {
 		EntityManager entityManager = super.getEntityManager();
 
 		Query query = entityManager.createQuery("SELECT u FROM Agendamento u WHERE u.dataAgendamento = :data "
-				+ "AND u.horaAgendamento = :hora AND u.consultorio_id = :idConsultorio AND u.status = :status");
+				+ "AND u.horaAgendamento = :hora AND u.consultorio.id = :id AND u.status = :status");
 		query.setParameter("data", data);
 		query.setParameter("hora", hora);
 		query.setParameter("id", idConsultorio);
@@ -35,7 +35,7 @@ public class AgendamentoDAO extends GenericDAO<Long, Agendamento> {
 		EntityManager entityManager = super.getEntityManager();
 
 		TypedQuery<Agendamento> query = entityManager.createQuery(
-				"SELECT u FROM Agendamento u WHERE u.consultorio_id = :id AND u.dataAgendamento = :data",
+				"SELECT u FROM Agendamento u WHERE u.consultorio.id = :id AND u.dataAgendamento = :data",
 				Agendamento.class);
 		query.setParameter("id", idConsultorio);
 		query.setParameter("data", MyDateGenerator.getCurrentDate());

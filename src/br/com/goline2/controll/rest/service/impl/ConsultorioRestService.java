@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -39,7 +40,7 @@ public class ConsultorioRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	// @RolesAllowed("ADMINISTRADOR")
+	@PermitAll
 	public Response create() throws IOException {
 
 		ResponseBuilder responseBuilder = Response.noContent();
@@ -52,11 +53,16 @@ public class ConsultorioRestService {
 
 			Consultorio consultorio = new Gson().fromJson(servletRequest.getReader(), Consultorio.class);
 
-			consultorio.setStatus(Constants.ACTIVE_USER);
+			if (!consultorioDAO.findByName(consultorio.getNome())) {
 
-			this.consultorioDAO.save(consultorio);
-			this.simpleEntityManager.commit();
+				this.consultorioDAO.save(consultorio);
+				this.simpleEntityManager.commit();
 
+				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
+			} else {
+				System.out.println("Consultorio ja cadastrado!!");
+				responseBuilder = ResponseBuilderGenerator.createErrorResponse(responseBuilder);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.simpleEntityManager.rollBack();
@@ -72,7 +78,7 @@ public class ConsultorioRestService {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-	// @RolesAllowed("ADMINISTRADOR")
+	@PermitAll
 	public Response update() throws IOException {
 
 		ResponseBuilder responseBuilder = Response.noContent();
@@ -107,7 +113,7 @@ public class ConsultorioRestService {
 	@DELETE
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/{idConsultorio}")
-	// @RolesAllowed("ADMINISTRADOR")
+	@PermitAll
 	public Response delete(@PathParam("idConsultorio") Long idConsultorio) throws IOException {
 
 		ResponseBuilder responseBuilder = Response.noContent();
@@ -140,7 +146,7 @@ public class ConsultorioRestService {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	// @RolesAllowed("ADMINISTRADOR")
+	@PermitAll
 	public Response read() throws IOException {
 
 		ResponseBuilder responseBuilder = Response.noContent();
@@ -159,6 +165,7 @@ public class ConsultorioRestService {
 					consultorio.setAdministradores(null);
 					consultorio.setAgendamento(null);
 					consultorio.setPacientes(null);
+					consultorio.setSenhas(null);
 					consultoriosJSON.add(consultorio);
 				}
 			}
@@ -179,9 +186,9 @@ public class ConsultorioRestService {
 	}
 
 	@GET
-	// @RolesAllowed("ADMINISTRADOR")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{idConsultorio}")
+	@PermitAll
 	public Response getById(@PathParam("idConsultorio") Long idConsultorio) throws IOException {
 
 		ResponseBuilder responseBuilder = Response.noContent();
@@ -197,6 +204,7 @@ public class ConsultorioRestService {
 			consultorio.setAdministradores(null);
 			consultorio.setAgendamento(null);
 			consultorio.setPacientes(null);
+			consultorio.setSenhas(null);
 
 			responseBuilder = ResponseBuilderGenerator.createOKResponseJSON(responseBuilder,
 					JSONUtil.objectToJSON(consultorio));

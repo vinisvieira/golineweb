@@ -29,8 +29,6 @@ public class SenhaDAO extends GenericDAO<Long, Senha> {
 
 	public List<Senha> pegarSenhasDia(Long id) {
 
-		System.out.println(id);
-		
 		EntityManager entityManager = super.getEntityManager();
 
 		TypedQuery<Senha> query = entityManager.createQuery("SELECT u FROM Senha u WHERE u.consultorio.id = :id "

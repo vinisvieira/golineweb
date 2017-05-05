@@ -95,10 +95,4 @@ public class Senha {
 		this.paciente = paciente;
 	}
 
-	@Override
-	public String toString() {
-		return "Senha [id=" + id + ", valorChamada=" + valorChamada + ", status=" + status + ", statusChamada="
-				+ statusChamada + ", dataInicio=" + dataInicio + ", dataFinal=" + dataFinal + "]";
-	}
-
 }

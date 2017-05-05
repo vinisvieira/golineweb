@@ -137,11 +137,4 @@ public class Consultorio {
 		this.agendamento = agendamento;
 	}
 
-	@Override
-	public String toString() {
-		return "Consultorio [id=" + id + ", nome=" + nome + ", rua=" + rua + ", bairro=" + bairro + ", numero=" + numero
-				+ ", cep=" + cep + ", status=" + status + ", statusFuncionamento=" + statusFuncionamento
-				+ ", administradores=" + administradores + ", pacientes=" + pacientes + ", senhas=" + senhas + "]";
-	}
-
 }

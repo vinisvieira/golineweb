@@ -25,7 +25,6 @@ import br.com.goline2.model.entity.impl.Agendamento;
 import br.com.goline2.model.jpa.impl.JPAUtil;
 import br.com.goline2.util.Constants;
 import br.com.goline2.util.JSONUtil;
-import br.com.goline2.util.MyDateGenerator;
 import br.com.goline2.util.ResponseBuilderGenerator;
 
 @Path("/agendamento")
@@ -53,13 +52,8 @@ public class AgendamentoRestService {
 
 			Agendamento agendamento = new Gson().fromJson(servletRequest.getReader(), Agendamento.class);
 
-			if (!this.agendamentoDAO.validarData(
-					MyDateGenerator.dateStringToSql(MyDateGenerator.dateToString(agendamento.getDataAgendamento())),
+			if (!this.agendamentoDAO.validarData(agendamento.getDataAgendamento(),
 					agendamento.getHoraAgendamento(), agendamento.getConsultorio().getId())) {
-
-				agendamento.setDataAgendamento(MyDateGenerator
-						.dateStringToDate(MyDateGenerator.dateToString(agendamento.getDataAgendamento())));
-				agendamento.setStatus(Constants.ACTIVE_ENTITY);
 
 				this.agendamentoDAO.save(agendamento);
 				this.simpleEntityManager.commit();

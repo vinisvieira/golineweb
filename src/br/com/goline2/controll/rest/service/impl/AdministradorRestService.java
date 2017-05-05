@@ -58,7 +58,7 @@ public class AdministradorRestService {
 
 			administrador = new Gson().fromJson(servletRequest.getReader(), Administrador.class);
 
-			if (!administradorDAO.loginExiste(administrador.getLogin())) {
+			if (!administradorDAO.emailExiste(administrador.getEmail())) {
 
 				administrador.setPassword(StringUtil.SHA1(administrador.getPassword()));
 
@@ -69,7 +69,7 @@ public class AdministradorRestService {
 
 			} else {
 
-				System.out.println("LOGIN JA EXISTE");
+				System.out.println("EMAIL JA CADASTRADO");
 				responseBuilder = ResponseBuilderGenerator.createErrorResponse(responseBuilder);
 
 			}

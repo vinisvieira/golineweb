@@ -26,7 +26,6 @@ import br.com.goline2.util.Constants;
 import br.com.goline2.util.JSONUtil;
 import br.com.goline2.util.ResponseBuilderGenerator;
 import br.com.goline2.util.StringUtil;
-import br.com.goline2.util.ValidarCPF;
 
 @Path("/paciente")
 public class PacienteRestService {
@@ -55,21 +54,14 @@ public class PacienteRestService {
 			paciente = new Gson().fromJson(servletRequest.getReader(), Paciente.class);
 
 			if (!this.pacienteDAO.validarEmail(paciente.getEmail())) {
-				if (ValidarCPF.validaCPF(paciente.getCpf())) {
 
-					paciente.setPassword(StringUtil.SHA1(paciente.getPassword()));
+				paciente.setPassword(StringUtil.SHA1(paciente.getPassword()));
 
-					pacienteDAO.save(paciente);
-					simpleEntityManager.commit();
+				pacienteDAO.save(paciente);
+				simpleEntityManager.commit();
 
-					responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
+				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
 
-				} else {
-
-					System.out.println("CPF Invalido");
-					responseBuilder = ResponseBuilderGenerator.createErrorResponse(responseBuilder);
-
-				}
 			} else {
 
 				System.out.println("Email Invalido");

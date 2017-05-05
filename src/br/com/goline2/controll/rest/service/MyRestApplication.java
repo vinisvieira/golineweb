@@ -1,5 +1,6 @@
 package br.com.goline2.controll.rest.service;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,11 +18,11 @@ public class MyRestApplication extends Application {
 
 	public MyRestApplication() {
 
-		singletons.add(new AdministradorRestService());
-		singletons.add(new AgendamentoRestService());
-		singletons.add(new ConsultorioRestService());
-		singletons.add(new PacienteRestService());
-		singletons.add(new SenhaRestService());
+		singletons.addAll(Arrays.asList(new AdministradorRestService(), 
+										new AgendamentoRestService(),
+										new ConsultorioRestService(), 
+										new PacienteRestService(), 
+										new SenhaRestService()));
 
 	}
 
