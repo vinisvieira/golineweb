@@ -65,7 +65,8 @@ public class AdministradorRestService {
 				administradorDAO.save(administrador);
 				simpleEntityManager.commit();
 
-				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
+				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder)
+						.header("Access-Control-Allow-Origin", "*");
 
 			} else {
 

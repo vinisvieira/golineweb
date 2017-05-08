@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import br.com.goline2.model.dao.impl.AgendamentoDAO;
 import br.com.goline2.model.entity.impl.Agendamento;
@@ -50,15 +51,20 @@ public class AgendamentoRestService {
 		try {
 			this.simpleEntityManager.beginTransaction();
 
-			Agendamento agendamento = new Gson().fromJson(servletRequest.getReader(), Agendamento.class);
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
 
-			if (!this.agendamentoDAO.validarData(agendamento.getDataAgendamento(),
-					agendamento.getHoraAgendamento(), agendamento.getConsultorio().getId())) {
+			Agendamento agendamento = gson.fromJson(servletRequest.getReader(), Agendamento.class);
+
+			System.out.println(agendamento.getHoraAgendamento());
+
+			if (!this.agendamentoDAO.validarData(agendamento.getDataAgendamento(), agendamento.getHoraAgendamento(),
+					agendamento.getConsultorio().getId())) {
 
 				this.agendamentoDAO.save(agendamento);
 				this.simpleEntityManager.commit();
 
-				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
+				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder)
+						.header("Access-Control-Allow-Origin", "*");
 
 			} else {
 

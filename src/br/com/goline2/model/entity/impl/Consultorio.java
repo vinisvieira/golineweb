@@ -17,6 +17,7 @@ public class Consultorio {
 	private String nome;
 	private String rua;
 	private String bairro;
+	private String cidade;
 	private String numero;
 	private String cep;
 	private String especialidade;
@@ -59,6 +60,14 @@ public class Consultorio {
 
 	public void setBairro(String bairro) {
 		this.bairro = bairro;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
 	}
 
 	public String getNumero() {

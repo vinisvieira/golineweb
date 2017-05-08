@@ -58,7 +58,8 @@ public class ConsultorioRestService {
 				this.consultorioDAO.save(consultorio);
 				this.simpleEntityManager.commit();
 
-				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
+				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder)
+						.header("Access-Control-Allow-Origin", "*");
 			} else {
 				System.out.println("Consultorio ja cadastrado!!");
 				responseBuilder = ResponseBuilderGenerator.createErrorResponse(responseBuilder);
@@ -96,7 +97,8 @@ public class ConsultorioRestService {
 			this.consultorioDAO.update(consultorio);
 			this.simpleEntityManager.commit();
 
-			responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
+			responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder)
+					.header("Access-Control-Allow-Origin", "*");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,7 +109,6 @@ public class ConsultorioRestService {
 		}
 
 		return responseBuilder.build();
-
 	}
 
 	@DELETE

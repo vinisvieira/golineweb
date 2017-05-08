@@ -82,7 +82,8 @@ public class SenhaRestService {
 				senhaDAO.save(senha);
 				simpleEntityManager.commit();
 
-				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
+				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder)
+						.header("Access-Control-Allow-Origin", "*");
 
 			} else {
 
@@ -99,7 +100,8 @@ public class SenhaRestService {
 					senhaDAO.save(senha);
 					simpleEntityManager.commit();
 
-					responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
+					responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder)
+							.header("Access-Control-Allow-Origin", "*");
 
 				} else {
 
@@ -111,7 +113,9 @@ public class SenhaRestService {
 					senhaDAO.save(senha);
 					simpleEntityManager.commit();
 
-					responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
+
+					responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder)
+							.header("Access-Control-Allow-Origin", "*");
 
 				}
 			}
