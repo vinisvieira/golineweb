@@ -1,6 +1,7 @@
 package br.com.goline2.controll.rest.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,9 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.google.gson.Gson;
 
+import br.com.goline2.model.dao.impl.ConsultorioDAO;
 import br.com.goline2.model.dao.impl.PacienteDAO;
+import br.com.goline2.model.entity.impl.Consultorio;
 import br.com.goline2.model.entity.impl.Paciente;
 import br.com.goline2.model.jpa.impl.JPAUtil;
 import br.com.goline2.util.Constants;
@@ -35,6 +38,7 @@ public class PacienteRestService {
 
 	private JPAUtil simpleEntityManager;
 	private PacienteDAO pacienteDAO;
+	private ConsultorioDAO consultorioDAO;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -56,13 +60,11 @@ public class PacienteRestService {
 			if (!this.pacienteDAO.validarEmail(paciente.getEmail())) {
 
 				paciente.setPassword(StringUtil.SHA1(paciente.getPassword()));
-
+				paciente.setStatus(Constants.ACTIVE_ENTITY);
 				pacienteDAO.save(paciente);
 				simpleEntityManager.commit();
 
-				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder)
-						.header("Access-Control-Allow-Origin", "*");
-
+				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
 			} else {
 
 				System.out.println("Email Invalido");
@@ -77,6 +79,73 @@ public class PacienteRestService {
 			this.simpleEntityManager.close();
 		}
 
+		return responseBuilder.build();
+
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/cadastro-rapido/{idConsultorio}")
+	@PermitAll
+	public Response createRapido(@PathParam("idConsultorio") Long idConsultorio) throws IOException {
+
+		ResponseBuilder responseBuilder = Response.noContent();
+
+		this.simpleEntityManager = JPAUtil.getInstance(Constants.PERSISTENCE_UNIT_NAME);
+		this.pacienteDAO = new PacienteDAO(simpleEntityManager.getEntityManager());
+		this.consultorioDAO = new ConsultorioDAO(simpleEntityManager.getEntityManager());
+		ArrayList<Consultorio> consultorios = new ArrayList<>();
+		Consultorio consultorio = new Consultorio();
+		Paciente paciente = new Paciente();
+
+		try {
+			this.simpleEntityManager.beginTransaction();
+
+			paciente = new Gson().fromJson(servletRequest.getReader(), Paciente.class);
+			consultorio = this.consultorioDAO.getById(idConsultorio);
+
+			if (!this.pacienteDAO.validarEmail(paciente.getEmail())) {
+
+				consultorios.add(consultorio);
+
+				paciente.setPassword(StringUtil.SHA1(paciente.getTelefone()));
+				paciente.setEmail(paciente.getNome());
+				paciente.setConsultorio(consultorios);
+				paciente.setStatus(Constants.ACTIVE_ENTITY);
+
+				pacienteDAO.save(paciente);
+				simpleEntityManager.commit();
+
+				if (paciente != null) {
+
+					SenhaRestService restService = new SenhaRestService();
+
+					Response.accepted(restService.create(idConsultorio, paciente.getId()));
+
+				}
+
+				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain
+						(Response.ok());
+			} else {
+
+				System.out.println("Email Invalido");
+				responseBuilder = ResponseBuilderGenerator.createErrorResponse(responseBuilder);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.simpleEntityManager.rollBack();
+			responseBuilder = ResponseBuilderGenerator.createErrorResponse(responseBuilder);
+		} finally {
+			
+			if (simpleEntityManager.getEntityManager().isOpen()) {
+				
+				this.simpleEntityManager.close();
+			
+			}
+		}
+			
 		return responseBuilder.build();
 
 	}

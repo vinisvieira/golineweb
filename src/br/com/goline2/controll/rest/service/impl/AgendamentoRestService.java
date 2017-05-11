@@ -63,8 +63,7 @@ public class AgendamentoRestService {
 				this.agendamentoDAO.save(agendamento);
 				this.simpleEntityManager.commit();
 
-				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder)
-						.header("Access-Control-Allow-Origin", "*");
+				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder);
 
 			} else {
 
