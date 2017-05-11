@@ -20,9 +20,37 @@ public class SenhaDAO extends GenericDAO<Long, Senha> {
 	public List<Long> pegarUltimaSenha(Long id) {
 		EntityManager entityManager = super.getEntityManager();
 
-		TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM Senha WHERE consultorio_id = :id",
-				Long.class);
+		TypedQuery<Long> query = entityManager
+				.createQuery("SELECT MAX(id) FROM Senha WHERE consultorio_id = :id AND dataInicio = :data", Long.class);
+
 		query.setParameter("id", id);
+		query.setParameter("data", MyDateGenerator.getCurrentDate());
+
+		return query.getResultList();
+	}
+
+	public List<Long> pegarUltimaSenhaChamada(Long id) {
+		EntityManager entityManager = super.getEntityManager();
+
+		TypedQuery<Long> query = entityManager
+				.createQuery("SELECT MAX(id) FROM Senha WHERE consultorio_id = :id AND dataInicio = :data"
+						+ " AND statusChamada = :status", Long.class);
+
+		query.setParameter("id", id);
+		query.setParameter("data", MyDateGenerator.getCurrentDate());
+		query.setParameter("status", Constants.ACTIVE_ENTITY);
+
+		return query.getResultList();
+	}
+	
+	public List<Long> pegarQuantidadeSenha(Long id) {
+		EntityManager entityManager = super.getEntityManager();
+
+		TypedQuery<Long> query = entityManager
+				.createQuery("SELECT COUNT(id) FROM Senha WHERE consultorio_id = :idConsultorio AND dataInicio = :data", Long.class);
+
+		query.setParameter("idConsultorio", id);
+		query.setParameter("data", MyDateGenerator.getCurrentDate());
 
 		return query.getResultList();
 	}

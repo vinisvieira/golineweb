@@ -113,7 +113,6 @@ public class SenhaRestService {
 					senhaDAO.save(senha);
 					simpleEntityManager.commit();
 
-
 					responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(responseBuilder)
 							.header("Access-Control-Allow-Origin", "*");
 
@@ -211,6 +210,75 @@ public class SenhaRestService {
 			this.simpleEntityManager.close();
 		}
 
+		return responseBuilder.build();
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/next/{idConsultorio}")
+	@PermitAll
+	public Response getNext(@PathParam("idConsultorio") Long idConsultorio) throws IOException {
+
+		ResponseBuilder responseBuilder = Response.noContent();
+
+		this.simpleEntityManager = JPAUtil.getInstance(Constants.PERSISTENCE_UNIT_NAME);
+		this.senhaDAO = new SenhaDAO(this.simpleEntityManager.getEntityManager());
+
+		try {
+			this.simpleEntityManager.beginTransaction();
+
+			List<Long> idSenha = this.senhaDAO.pegarUltimaSenhaChamada(idConsultorio);
+
+			Senha senha = this.senhaDAO.getById(idSenha.get(0));
+
+			senha.setValorChamada(senha.getValorChamada() + 1);
+			senha.setConsultorio(null);
+			senha.setPaciente(null);
+
+			responseBuilder = ResponseBuilderGenerator.createOKResponseJSON(responseBuilder,
+					JSONUtil.objectToJSON(senha));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.simpleEntityManager.rollBack();
+			responseBuilder = ResponseBuilderGenerator.createErrorResponse(responseBuilder);
+		} finally {
+			this.simpleEntityManager.close();
+		}
+		return responseBuilder.build();
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/quant/{idConsultorio}")
+	@PermitAll
+	public Response getQuantidade(@PathParam("idConsultorio") Long idConsultorio) throws IOException {
+
+		ResponseBuilder responseBuilder = Response.noContent();
+
+		this.simpleEntityManager = JPAUtil.getInstance(Constants.PERSISTENCE_UNIT_NAME);
+		this.senhaDAO = new SenhaDAO(this.simpleEntityManager.getEntityManager());
+
+		try {
+			this.simpleEntityManager.beginTransaction();
+
+			List<Long> quant = this.senhaDAO.pegarQuantidadeSenha(idConsultorio);
+
+			int quantidade = Integer.valueOf((quant.get(0).toString()));
+
+			quantidade = quantidade + 1;
+			
+			String quantSenha = String.valueOf(quantidade);
+
+			responseBuilder = ResponseBuilderGenerator.createOKResponseJSON(responseBuilder, quantSenha);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.simpleEntityManager.rollBack();
+			responseBuilder = ResponseBuilderGenerator.createErrorResponse(responseBuilder);
+		} finally {
+			this.simpleEntityManager.close();
+		}
 		return responseBuilder.build();
 	}
 
