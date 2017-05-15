@@ -3,6 +3,7 @@ package br.com.goline2.model.entity.impl;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -85,7 +86,7 @@ public class Senha {
 		this.consultorio = consultorio;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "paciente_id")
 	public Paciente getPaciente() {
 		return paciente;
