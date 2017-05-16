@@ -146,6 +146,7 @@ public class SenhaRestService {
 			senhas.get(0).setConsultorio(null);
 			senhas.get(0).setDataInicio(null);
 			senhas.get(0).setDataFinal(null);
+			senhas.get(0).setPaciente(null);
 
 			Senha senha = new Senha();
 
