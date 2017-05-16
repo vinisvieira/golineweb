@@ -1,0 +1,53 @@
+header {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    overflow-y: hidden;
+    background: url(../img/bg-pattern.png),#7b4397;
+    background: url(../img/bg-pattern.png),-webkit-linear-gradient(to left,#7b4397,#dc2430);
+    background: url(../img/bg-pattern.png),linear-gradient(to left,#41d28f,#3f8348);
+    color: #fff;
+}
+section.features .feature-item i {
+    font-size: 80px;
+    background: -webkit-linear-gradient(to left,#7b4397,#dc2430);
+    background: linear-gradient(to left,#438097,#9edc24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+a {
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+    color: #25e624;
+}
+
+
+.col-lg-12 {
+    width: 100%;
+    padding-top: 0px;
+}
+.login{
+	background: #222;
+}
+.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 40px;
+    color: inherit;
+}
+.btn {
+    border-radius: 5px;
+}
+.btn-success {
+    color: #fff;
+    background-color: rgba(92, 184, 92, 0.12);
+    border-color: #4cae4c;
+}
+.form-group {
+    margin-bottom: 15px;
+    padding: 2px;
+}
+.navbar {
+    border: 0.5px solid rgba(0, 0, 0, 0.35);
+}
