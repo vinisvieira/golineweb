@@ -38,9 +38,9 @@ public class SenhaRestService {
 	private ConsultorioDAO consultorioDAO;
 	private PacienteDAO pacienteDAO;
 
-	@POST
+	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	@Path("/{idConsultorio}/{idPaciente}")
+	@Path("criar/{idConsultorio}/{idPaciente}")
 	@PermitAll
 	public Response create(@PathParam("idConsultorio") Long idConsultorio, @PathParam("idPaciente") Long idPaciente)
 			throws IOException {
