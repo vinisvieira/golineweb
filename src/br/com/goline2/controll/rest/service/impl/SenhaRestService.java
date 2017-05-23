@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -265,7 +264,7 @@ public class SenhaRestService {
 			int quantidade = Integer.valueOf((quant.get(0).toString()));
 
 			quantidade = quantidade + 1;
-			
+
 			String quantSenha = String.valueOf(quantidade);
 
 			responseBuilder = ResponseBuilderGenerator.createOKResponseJSON(responseBuilder, quantSenha);
