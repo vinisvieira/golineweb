@@ -59,7 +59,9 @@ public class PacienteRestService {
 
 			if (!this.pacienteDAO.validarEmail(paciente.getEmail())) {
 
-				paciente.setPassword(StringUtil.SHA1(paciente.getPassword()));
+				if (!(paciente.getPassword() == null)) {
+					paciente.setPassword(StringUtil.SHA1(paciente.getPassword()));
+				}
 				paciente.setStatus(Constants.ACTIVE_ENTITY);
 				pacienteDAO.save(paciente);
 				simpleEntityManager.commit();
@@ -125,8 +127,7 @@ public class PacienteRestService {
 
 				}
 
-				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain
-						(Response.ok());
+				responseBuilder = ResponseBuilderGenerator.createOKResponseTextPlain(Response.ok());
 			} else {
 
 				System.out.println("Email Invalido");
@@ -138,14 +139,14 @@ public class PacienteRestService {
 			this.simpleEntityManager.rollBack();
 			responseBuilder = ResponseBuilderGenerator.createErrorResponse(responseBuilder);
 		} finally {
-			
+
 			if (simpleEntityManager.getEntityManager().isOpen()) {
-				
+
 				this.simpleEntityManager.close();
-			
+
 			}
 		}
-			
+
 		return responseBuilder.build();
 
 	}
