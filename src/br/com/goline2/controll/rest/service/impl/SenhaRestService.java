@@ -136,20 +136,26 @@ public class SenhaRestService {
 
 		this.simpleEntityManager = JPAUtil.getInstance(Constants.PERSISTENCE_UNIT_NAME);
 		this.senhaDAO = new SenhaDAO(this.simpleEntityManager.getEntityManager());
+		Senha senha = new Senha();
 
 		try {
 			this.simpleEntityManager.beginTransaction();
 
-			List<Senha> senhas = this.senhaDAO.pegarSenhasDia(idConsultorio);
+			if (this.senhaDAO.pegarSenhasDiaBoolean(idConsultorio)) {
 
-			senhas.get(0).setConsultorio(null);
-			senhas.get(0).setDataInicio(null);
-			senhas.get(0).setDataFinal(null);
-			senhas.get(0).setPaciente(null);
+				List<Senha> senhas = this.senhaDAO.pegarSenhasDia(idConsultorio);
 
-			Senha senha = new Senha();
+				senhas.get(0).setConsultorio(null);
+				senhas.get(0).setDataInicio(null);
+				senhas.get(0).setDataFinal(null);
+				senhas.get(0).setPaciente(null);
+				senha = senhas.get(0);
 
-			senha = senhas.get(0);
+			} else {
+
+				senha.setValorChamada(0);
+
+			}
 
 			responseBuilder = ResponseBuilderGenerator.createOKResponseJSON(responseBuilder,
 					JSONUtil.objectToJSON(senha));

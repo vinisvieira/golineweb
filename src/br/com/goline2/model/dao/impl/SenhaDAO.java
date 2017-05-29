@@ -69,6 +69,21 @@ public class SenhaDAO extends GenericDAO<Long, Senha> {
 		return query.getResultList();
 
 	}
+	
+	public boolean pegarSenhasDiaBoolean(Long id) {
+
+		EntityManager entityManager = super.getEntityManager();
+
+		TypedQuery<Senha> query = entityManager.createQuery("SELECT u FROM Senha u WHERE u.consultorio.id = :id "
+				+ "AND u.dataInicio = :data AND u.statusChamada = :status", Senha.class);
+
+		query.setParameter("id", id);
+		query.setParameter("data", MyDateGenerator.getCurrentDate());
+		query.setParameter("status", Constants.INACTIVE_ENTITY);
+
+		return (query.getResultList().size() > 0);
+
+	}
 
 	public List<Senha> pegarSenhasChamadas(Long id) {
 		EntityManager entityManager = super.getEntityManager();
